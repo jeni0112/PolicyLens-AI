@@ -33,10 +33,18 @@ def chat():
     if not prompt:
         return render_template("index.html", messages=session.get("messages", []))
 
+    print("BEFORE SESSION GET", flush=True)
+
     # Get existing conversation
     messages = session.get("messages", [])
 
+    print("AFTER SESSION GET", flush=True)
+
+    print("BEFORE GET_RAG_RESPONSE", flush=True)
+
     response, sources, show_sources = get_rag_response(prompt, messages)
+
+    print("AFTER GET_RAG_RESPONSE", flush=True)
 
     # Remove duplicate source documents
     unique_sources = []
