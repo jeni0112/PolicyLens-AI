@@ -6,9 +6,6 @@ from langchain_core.documents import Document
 # from config import GOOGLE_API_KEY
 from config import embeddings, POLICY_METADATA
 from services.openai_service import get_response
-from sentence_transformers import CrossEncoder
-
-reranker = CrossEncoder("BAAI/bge-reranker-base")
 
 # Load the Chroma database
 db = Chroma(persist_directory="vectorstore", embedding_function=embeddings)
@@ -451,33 +448,8 @@ def get_rag_response(query, conversation_history):
 
     hybrid_results = reciprocal_rank_fusion(vector_results, bm25_results)
 
-    # Keep top 10 candidates for reranking
-    hybrid_results = hybrid_results[:10]
-
-    # Rerank the 10 candidate chunks
-    pairs = [[self_search_query, doc.page_content] for doc in hybrid_results]
-
-    scores = reranker.predict(pairs)
-
-    print("\n==============================")
-    print("RERANKER SCORES")
-    print("==============================")
-
-    for doc, score in zip(hybrid_results, scores):
-        print(f"Score: {score:.4f}")
-        print(f"Source: {doc.metadata.get('source')}")
-        print(f"Page: {doc.metadata.get('page')}")
-        print(f"Content: {doc.page_content[:200]}")
-        print("------------------------------")
-
-    # Attach reranker score to each document
-    reranked_results = list(zip(hybrid_results, scores))
-
-    # Sort by reranker score — highest first
-    reranked_results.sort(key=lambda x: x[1], reverse=True)
-
-    # Keep the best 5 chunks
-    hybrid_results = [doc for doc, score in reranked_results[:5]]
+    # Keep top 5 results
+    hybrid_results = hybrid_results[:5]
 
     # ========================================================
     # DEBUG OUTPUT
