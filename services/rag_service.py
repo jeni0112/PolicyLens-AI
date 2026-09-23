@@ -19,12 +19,6 @@ documents = [
     for item in chunks_data
 ]
 
-# CREATE BM25 RETRIEVER
-
-bm25_retriever = BM25Retriever.from_documents(documents)
-bm25_retriever.k = 5
-
-
 def generate_self_query(user_query):
     """
     Uses the LLM to convert the user's natural-language question
@@ -425,21 +419,26 @@ def get_rag_response(query, conversation_history):
     else:
         chroma_filter = None
 
+    print("STARTING VECTOR SEARCH")
 
     vector_results = db.max_marginal_relevance_search(
         self_search_query, k=5, fetch_k=10, filter=chroma_filter
     )
+    print("VECTOR SEARCH COMPLETE")
 
     # BM25 SEARCH
 
     filtered_documents = filter_documents_by_metadata(documents, metadata_filters)
+    print("FILTERING COMPLETE")
 
     if filtered_documents:
         filtered_bm25_retriever = BM25Retriever.from_documents(filtered_documents)
 
         filtered_bm25_retriever.k = 5
+        print("BM25 BUILT")
 
         bm25_results = filtered_bm25_retriever.invoke(self_search_query)
+        print("BM25 SEARCH COMPLETE")
 
     else:
         bm25_results = []
