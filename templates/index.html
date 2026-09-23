@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PolicyLens AI</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+</head>
+
+
+<body>
+
+    <div class="app-container">
+
+
+        <!-- ================= HEADER ================= -->
+
+        <header class="chat-header">
+
+            <div class="brand">
+
+                <!-- PolicyLens Logo -->
+
+                <div class="brand-logo">
+
+                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+
+                        <path d="M32 8 L50 15 V29 C50 42 42 51 32 56
+                             C22 51 14 42 14 29 V15 Z" fill="none" stroke="white" stroke-width="4"
+                            stroke-linejoin="round" />
+
+                        <path d="M23 31 L29 38 L42 23" fill="none" stroke="white" stroke-width="4.5"
+                            stroke-linecap="round" stroke-linejoin="round" />
+
+                    </svg>
+
+                </div>
+
+
+                <div class="brand-text">
+
+                    <h1>
+                        PolicyLens <span>AI</span>
+                    </h1>
+
+                    <p>
+                        AI-Powered Policy & Compliance Assistant
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Online Status -->
+
+            <div class="status">
+
+                <span class="status-dot"></span>
+
+                Online
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ================= CHAT AREA ================= -->
+
+        <main class="chat-area {% if not messages %}is-welcome{% endif %}">
+
+
+            <!-- ================= WELCOME SCREEN ================= -->
+
+            {% if not messages %}
+
+            <div class="welcome-screen">
+
+                <div class="welcome-logo">
+
+                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+
+                        <path d="M32 8 L50 15 V29 C50 42 42 51 32 56
+                             C22 51 14 42 14 29 V15 Z" fill="none" stroke="white" stroke-width="4"
+                            stroke-linejoin="round" />
+
+                        <path d="M23 31 L29 38 L42 23" fill="none" stroke="white" stroke-width="4.5"
+                            stroke-linecap="round" stroke-linejoin="round" />
+
+                    </svg>
+
+                </div>
+
+
+                <h2>
+                    How can I help you with policies?
+                </h2>
+
+
+                <p class="welcome-description">
+
+                    Ask me about policy requirements,
+                    compliance, rules, conflicts,
+                    or specific policy provisions.
+
+                </p>
+
+            </div>
+
+            {% endif %}
+
+
+
+            <!-- ================= CONVERSATION ================= -->
+
+            {% for message in messages %}
+
+
+                {% if message.role == 'user' %}
+
+
+                <!-- ================= USER MESSAGE ================= -->
+
+                <div class="message user-message">
+
+                    <div class="message-content">
+
+                        <div class="message-name">
+                            You
+                        </div>
+
+                        <div class="bubble">
+
+                            {{ message.content }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {% else %}
+
+
+                <!-- ================= ASSISTANT MESSAGE ================= -->
+
+                <div class="message assistant-message">
+
+
+                    <div class="avatar">
+
+                        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+
+                            <path d="M32 8 L50 15 V29 C50 42 42 51 32 56
+                                    C22 51 14 42 14 29 V15 Z" fill="none" stroke="white" stroke-width="4"
+                                stroke-linejoin="round" />
+
+                            <path d="M23 31 L29 38 L42 23" fill="none" stroke="white" stroke-width="4.5"
+                                stroke-linecap="round" stroke-linejoin="round" />
+
+                        </svg>
+
+                    </div>
+
+
+
+                    <div class="message-content">
+
+                        <div class="message-name">
+                            PolicyLens AI
+                        </div>
+
+                        <div class="bubble answer-text">
+
+
+                            <!-- ================= RESPONSE TYPE ================= -->
+
+                            {% if message.compliance %}
+
+                                {% if message.compliance|upper == "INFORMATIONAL" %}
+
+                                <div class="compliance-item">                                                                                       
+
+                                    <div class="compliance-status informational">
+
+                                        <span class="status-symbol">
+                                            i
+                                        </span>
+
+                                        <span>
+                                            INFORMATIONAL
+                                        </span>
+
+                                    </div>
+                                </div>
+
+
+                                {% elif message.compliance|upper == "COMPLIANT" %}
+
+                                <div class="compliance-item">                         
+
+                                    <div class="compliance-status compliant">
+
+                                        <span class="status-symbol">
+                                            ✓
+                                        </span>
+
+                                        <span>
+                                            COMPLIANT
+                                        </span>
+
+                                    </div>
+                                </div>
+
+
+                                {% elif message.compliance|upper == "NON-COMPLIANT" %}
+
+                                <div class="compliance-item">
+
+                                    <div class="compliance-status non-compliant">
+
+                                        <span class="status-symbol">
+                                            ✕
+                                        </span>
+
+                                        <span>
+                                            NON-COMPLIANT
+                                        </span>
+                                    </div>
+
+                                </div>
+
+
+                                {% elif message.compliance|upper == "NEEDS REVIEW" %}
+
+                                <div class="compliance-item">
+
+                                    <div class="compliance-status needs-review">
+
+                                        <span class="status-symbol">
+                                            !
+                                        </span>
+
+                                        <span>
+                                            NEEDS REVIEW
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                                {% elif message.compliance|upper == "OUT OF SCOPE" %}
+
+                                <div class="compliance-item">
+
+                                    <div class="compliance-status informational">
+
+                                        <span class="status-symbol">
+                                            i
+                                        </span>
+
+                                        <span>
+                                            OUT OF SCOPE
+                                        </span>       
+                                        
+                                    </div>
+
+                                </div>
+
+                                {% endif %}
+                            
+                            {% endif %}
+                            
+
+                            <!-- ================= INFORMATIONAL RESPONSE ================= -->
+
+                            {% if message.compliance|upper == "INFORMATIONAL" %}
+
+                                {% if message.answer or message.response or message.content %}
+                                <div class="response-section">
+                                    <div class="response-label">Answer</div>
+                                    <div class="markdown-content response-text">
+                                        {% if message.answer %}
+                                            {{ message.answer }}
+                                        {% elif message.response %}
+                                            {{ message.response }}
+                                        {% elif message.content %}
+                                            {{message.content }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                
+                                {% if message.why %}
+                                <div class="response-section">
+                                    <div class="response-label">Why?</div>
+                                    <div class="markdown-content response-text">
+                                        {{ message.why }}
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if message.what_you_can_do %}
+                                <div class="response-section">
+                                    <div class="response-label">What you can do</div>
+                                    <div class="markdown-content response-text">
+                                        {{ message.what_you_can_do }}
+                                    </div>
+                                </div>
+
+                                {% endif %}
+
+                            {% elif message.compliance|upper == "OUT OF SCOPE" %}
+
+                                <div class="response-section">
+                                    <div class="markdown-content response-text">
+                                        {{ message.answer }}
+                                    </div>
+                                </div>
+
+
+                            {% else %}
+
+                                <!-- ================= SUMMARY ================= -->
+
+                                {% if message.summary %}
+                                    <div class="response-section summary-section">
+                                        <div class="response-label">Summary</div>
+                                        <div class="markdown-content response-text">
+                                            {{ message.summary }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+
+                                <!-- ================= REASON ================= -->
+
+                                {% if message.reason %}
+                                    <div class="response-section">
+                                        <div class="response-label">Reason</div>
+                                        <div class="markdown-content response-text">
+                                            {{ message.reason }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+
+                                <!-- ================= RECOMMENDATION ================= -->
+
+                                {% if message.recommendation %}
+                                    <div class="response-section">
+                                        <div class="response-label">Recommendation</div>
+                                        <div class="markdown-content response-text">
+                                            {{ message.recommendation }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+
+                                <!-- ================= POLICY REQUIREMENT ================= -->
+
+                                {% if message.policy_requirement %}
+                                    <div class="response-section">
+                                        <div class="response-label">Policy Requirement</div>
+                                        <div class="markdown-content response-text">
+                                            {{ message.policy_requirement }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                            {% endif %}
+
+                            <!-- ================= SOURCES ================= -->
+
+                            {% if message.show_sources and message.sources %}
+
+                                <div class="source-section">
+
+                                    <div class="source-title">
+                                        📚 Sources
+                                    </div>
+
+                                    <div class="source-chips">
+
+                                        {% for source in message.sources %}
+
+                                        <a href="/documents/{{ source.source }}" target="_blank" class="source-chip">
+                                            📄 {{ source.source }}
+                                        </a>
+
+                                        {% endfor %}
+
+                                    </div>
+
+                                </div>
+
+                            {% endif %}                              
+
+                        </div> 
+
+                    </div>
+
+                </div>   
+                
+                {% endif %}
+
+            {% endfor %}
+
+           
+            <!-- ================= INPUT ================= -->
+
+                <form action="/chat" method="POST" class="chat-form">
+
+                    <textarea id="prompt" name="prompt" rows="1"
+                        placeholder="Ask about a policy, compliance requirement, or control..." required></textarea>
+
+                    <button type="submit" class="send-button">
+
+                        ➤
+
+                    </button>
+
+                </form>
+
+
+                <!-- ================= DISCLAIMER ================= -->
+
+                <div class="disclaimer">
+
+                    PolicyLens AI can make mistakes.
+                    Verify important compliance decisions against the official policy.
+
+                </div>
+
+
+        </main>
+
+    </div>
+
+
+
+    <script>
+
+
+        // ================= TEXTAREA =================
+
+        const textarea =
+            document.getElementById("prompt");
+
+        const form =
+            document.querySelector(".chat-form");
+
+
+        // Enter = Send
+        // Shift + Enter = New line
+
+        textarea.addEventListener("keydown", function (event) {
+
+            if (event.key === "Enter" && !event.shiftKey) {
+
+                event.preventDefault();
+
+                form.submit();
+
+            }
+
+        });
+
+
+        // Auto resize textarea
+
+        textarea.addEventListener("input", function () {
+
+            this.style.height = "auto";
+
+            this.style.height =
+                Math.min(this.scrollHeight, 150) + "px";
+
+        });
+
+
+
+        // ================= SCROLL TO LATEST =================
+
+        window.onload = function () {
+
+            const chatArea =
+                document.querySelector(".chat-area");
+
+            if (chatArea) {
+
+                chatArea.scrollTop =
+                    chatArea.scrollHeight;
+
+            }
+
+        };
+
+
+
+        // ================= MARKDOWN =================
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            document
+                .querySelectorAll(".markdown-content")
+                .forEach(function (element) {
+
+                    const markdown =
+                        element.textContent.trim();
+
+                    element.innerHTML =
+                        marked.parse(markdown);
+
+                });
+
+        });
+
+
+    </script>
+
+
+</body>
+
+</html>

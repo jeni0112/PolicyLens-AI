@@ -1,0 +1,358 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>PolicyLens AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="app-container">
+
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="chat-header">
+
+        <div class="college-info">
+
+            <div class="college-logo">
+                🛡️
+            </div>
+
+            <div>
+
+                <h1>PolicyLens AI</h1>
+
+                <p>
+                    AI Policy Compliance Assistant
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="status">
+
+            <span class="status-dot"></span>
+
+            Online
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ================= CHAT AREA ================= -->
+
+    <main class="chat-area">
+
+
+        {% for message in messages %}
+
+
+            <!-- ================= USER MESSAGE ================= -->
+
+            {% if message.role == 'user' %}
+
+            <div class="message user-message">
+
+                <div class="message-content">
+
+                    <div class="message-name">
+                        You
+                    </div>
+
+                    <div class="bubble">
+
+                        {{ message.content }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= ASSISTANT MESSAGE ================= -->
+
+            {% else %}
+
+            <div class="message assistant-message">
+
+
+                <!-- Assistant Icon -->
+
+                <div class="avatar">
+                    🛡️
+                </div>
+
+
+                <div class="message-content">
+
+
+                    <div class="message-name">
+                        PolicyLens AI
+                    </div>
+
+
+                    <div class="bubble answer-text">
+
+
+                        <!-- Main Answer -->
+
+                        {{ message.content
+                           | replace('\n', '<br>')
+                           | safe }}
+
+
+
+                        <!-- ================= POLICY DETAILS ================= -->
+
+                        {% if message.policy
+                              or message.compliance
+                              or message.evidence
+                              or message.sources %}
+
+                        <div class="policy-details">
+
+
+                            <!-- Policy -->
+
+                            {% if message.policy %}
+
+                            <div class="policy-item">
+
+                                <div class="policy-label">
+                                    Policy
+                                </div>
+
+                                <div class="policy-value">
+                                    {{ message.policy }}
+                                </div>
+
+                            </div>
+
+                            {% endif %}
+
+
+
+                            <!-- Compliance -->
+
+                            {% if message.compliance %}
+
+                            <div class="policy-item">
+
+                                <div class="policy-label">
+                                    Compliance Status
+                                </div>
+
+                                <div class="policy-value compliance-status">
+
+                                    {{ message.compliance }}
+
+                                </div>
+
+                            </div>
+
+                            {% endif %}
+
+
+
+                            <!-- Evidence -->
+
+                            {% if message.evidence %}
+
+                            <div class="policy-item">
+
+                                <div class="policy-label">
+                                    Evidence
+                                </div>
+
+                                <div class="policy-value evidence-text">
+
+                                    {{ message.evidence
+                                       | replace('\n', '<br>')
+                                       | safe }}
+
+                                </div>
+
+                            </div>
+
+                            {% endif %}
+
+
+
+                            <!-- Sources -->
+
+                            {% if message.sources %}
+
+                            <div class="policy-item">
+
+                                <div class="policy-label">
+                                    Source
+                                </div>
+
+
+                                <div class="source-list">
+
+                                    {% for source in message.sources %}
+
+                                    <div class="source-item">
+
+                                        <span>
+                                            {{ source.source }}
+                                        </span>
+
+                                        {% if source.page %}
+
+                                        <span>
+                                            — Page {{ source.page }}
+                                        </span>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            </div>
+
+                            {% endif %}
+
+
+                        </div>
+
+                        {% endif %}
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+        {% endfor %}
+
+
+
+        <!-- ================= ASK ANOTHER QUESTION ================= -->
+
+        <form action="/chat"
+              method="POST"
+              class="chat-form">
+
+
+            <textarea
+                name="prompt"
+                id="prompt"
+                placeholder="Ask about a policy, compliance requirement, or control..."
+                rows="1"
+                required></textarea>
+
+
+            <button type="submit"
+                    class="send-button">
+
+                ➤
+
+            </button>
+
+
+        </form>
+
+
+    </main>
+
+
+</div>
+
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+    const textarea = document.querySelector('textarea');
+
+    const form = document.querySelector('.chat-form');
+
+
+    /*
+     * Submit when pressing Enter.
+     * Shift + Enter creates a new line.
+     */
+
+    textarea.addEventListener('keydown', function(event) {
+
+        if (event.key === 'Enter' && !event.shiftKey) {
+
+            event.preventDefault();
+
+            form.submit();
+
+        }
+
+    });
+
+
+
+    /*
+     * Automatically resize textarea.
+     */
+
+    textarea.addEventListener('input', function() {
+
+        this.style.height = 'auto';
+
+        this.style.height = this.scrollHeight + 'px';
+
+    });
+
+
+
+    /*
+     * Scroll chat to the latest message.
+     */
+
+    window.onload = function() {
+
+        const chatArea =
+            document.querySelector('.chat-area');
+
+
+        if (chatArea) {
+
+            chatArea.scrollTop =
+                chatArea.scrollHeight;
+
+        }
+
+    };
+
+</script>
+
+
+</body>
+
+</html>
+
