@@ -107,8 +107,8 @@ POLICY_METADATA = {
         "status": "active"
     },
 
-    "Employment_Policy_and_Practices.pdf": {
-        "source": "Employment_Policy_and_Practices.pdf",
+    "Employment Policy and Practices.pdf": {
+        "source": "Employment Policy and Practices.pdf",
         "department": "HR",
         "policy_type": "Employment Policy and Practices",
         "policy_id": "HR-EP-001",
