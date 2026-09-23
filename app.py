@@ -22,8 +22,13 @@ def serve_document(filename):
 @app.route("/chat", methods=["POST"])
 def chat():
     print("\n========== CHAT ROUTE ENTERED ==========", flush=True)
+    print(f"REQUEST METHOD: {request.method}", flush=True)
+    print(f"CONTENT TYPE: {request.content_type}", flush=True)
+    print(f"CONTENT LENGTH: {request.content_length}", flush=True)
+
 
     prompt = request.form.get("prompt", "").strip()
+    print(f"PROMPT RECEIVED: {prompt}", flush=True)
 
     if not prompt:
         return render_template("index.html", messages=session.get("messages", []))
