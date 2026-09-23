@@ -21,6 +21,7 @@ def serve_document(filename):
 
 @app.route("/chat", methods=["POST"])
 def chat():
+    print("\n========== CHAT ROUTE ENTERED ==========", flush=True)
 
     prompt = request.form.get("prompt", "").strip()
 
