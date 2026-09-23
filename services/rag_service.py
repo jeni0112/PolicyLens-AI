@@ -437,10 +437,11 @@ def get_rag_response(query, conversation_history):
 
     print("STARTING VECTOR SEARCH")
 
-    vector_results = db.max_marginal_relevance_search(
-        self_search_query, k=5, fetch_k=10, filter=chroma_filter
+    vector_results = db.similarity_search(
+        self_search_query, k=5, filter=chroma_filter
     )
     print("VECTOR SEARCH COMPLETE")
+    print("VECTOR RESULTS:", len(vector_results), flush=True)
 
     # BM25 SEARCH
     print("BEFORE BM25", flush=True)
