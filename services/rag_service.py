@@ -311,11 +311,17 @@ def check_query_scope(query):
 # ============================================================
 
 
-def get_rag_response(query, conversation_history):  
+def get_rag_response(query, conversation_history):
+
+    print("\n========== RAG START ==========", flush=True)
+    print("QUERY:", query, flush=True)
+    print("HISTORY LENGTH:", len(conversation_history), flush=True)
 
     # ==========================================
     # CONVERSATION-AWARE QUERY REWRITING
     # ==========================================
+
+    print("BEFORE REWRITE", flush=True)
 
     rewritten_query = query
 
@@ -364,6 +370,8 @@ def get_rag_response(query, conversation_history):
 
         rewritten_query = get_response(rewrite_prompt).strip()
 
+        print("After REWRITE", flush=True)
+
         if not rewritten_query:
             rewritten_query = query
 
@@ -377,6 +385,7 @@ def get_rag_response(query, conversation_history):
     # ==========================================
     # SCOPE CHECK
     # ==========================================
+    print("BEFORE Scope", flush=True)
     
     scope = check_query_scope(query)
     
@@ -392,6 +401,7 @@ def get_rag_response(query, conversation_history):
     # ==========================================
     # METADATA-AWARE QUERY
     # ==========================================
+    print("BEFORE self query", flush=True)
 
     self_query_result = generate_self_query(rewritten_query)
 
@@ -406,6 +416,8 @@ def get_rag_response(query, conversation_history):
     print("Conversation-Rewritten Query:", rewritten_query)
     print("Self-Query Search Query:", self_search_query)
     print("Metadata Filters:", metadata_filters)
+
+    print("After self query", flush=True)
 
     # VECTOR SEARCH
 
@@ -427,6 +439,7 @@ def get_rag_response(query, conversation_history):
     print("VECTOR SEARCH COMPLETE")
 
     # BM25 SEARCH
+    print("BEFORE BM25", flush=True)
 
     filtered_documents = filter_documents_by_metadata(documents, metadata_filters)
     print("FILTERING COMPLETE")
