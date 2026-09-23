@@ -422,7 +422,9 @@ def get_rag_response(query, conversation_history):
     # VECTOR SEARCH
 
     if metadata_filters:
+        print("BUILDING CHROMA FILTER", flush=True)
         conditions = [ {field: value} for field, value in metadata_filters.items() ]
+        print("CHROMA CONDITIONS BUILT:", conditions, flush=True)
 
         if len(conditions) == 1: 
             chroma_filter = conditions[0] 
@@ -430,6 +432,8 @@ def get_rag_response(query, conversation_history):
             chroma_filter = {"$and": conditions}
     else:
         chroma_filter = None
+
+    print("CHROMA FILTER:", chroma_filter, flush=True)
 
     print("STARTING VECTOR SEARCH")
 
