@@ -1,12 +1,14 @@
 import sys
 import chromadb
-import shutil
-import os
+
 
 print("========== ENVIRONMENT VERSIONS ==========", flush=True)
 print("Python:", sys.version, flush=True)
 print("ChromaDB:", chromadb.__version__, flush=True)
 print("==========================================", flush=True)
+
+import shutil
+import os
 
 from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter

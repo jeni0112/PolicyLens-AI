@@ -10,6 +10,15 @@ from services.openai_service import get_response
 # Load the Chroma database
 db = Chroma(persist_directory="vectorstore", embedding_function=embeddings)
 
+print("========== CHROMA STARTUP TEST ==========", flush=True)
+
+try:
+    print("CHROMA COUNT:", db._collection.count(), flush=True)
+except Exception as e:
+    print("CHROMA COUNT ERROR:", repr(e), flush=True)
+
+print("========== CHROMA STARTUP TEST END ==========", flush=True)
+
 # Load chunks saved during ingestion
 with open("chunks.json", "r", encoding="utf-8") as f:
     chunks_data = json.load(f)
