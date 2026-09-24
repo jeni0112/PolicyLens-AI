@@ -452,6 +452,7 @@ def get_rag_response(query, conversation_history):
     print("BEFORE CHROMA SIMILARITY SEARCH", flush=True)
 
     try:
+        print("Inside try block", flush=True)
         vector_results = db.similarity_search(
         self_search_query, k=5
         )
