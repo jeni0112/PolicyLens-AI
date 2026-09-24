@@ -441,7 +441,7 @@ def get_rag_response(query, conversation_history):
 
     try:
         vector_results = db.similarity_search(
-        self_search_query, k=5, filter=chroma_filter
+        self_search_query, k=5
         )
 
         print("AFTER CHROMA SIMILARITY SEARCH", flush=True)
