@@ -435,13 +435,21 @@ def get_rag_response(query, conversation_history):
 
     print("CHROMA FILTER:", chroma_filter, flush=True)
 
-    print("STARTING VECTOR SEARCH")
+    print("STARTING VECTOR SEARCH", flush=True)
 
-    vector_results = db.similarity_search(
+    print("BEFORE CHROMA SIMILARITY SEARCH", flush=True)
+
+    try:
+        vector_results = db.similarity_search(
         self_search_query, k=5, filter=chroma_filter
-    )
-    print("VECTOR SEARCH COMPLETE")
-    print("VECTOR RESULTS:", len(vector_results), flush=True)
+        )
+
+        print("AFTER CHROMA SIMILARITY SEARCH", flush=True)
+        print("VECTOR RESULTS:", len(vector_results), flush=True)
+
+    except Exception as e:
+        print("CHROMA SEARCH ERROR:", repr(e), flush=True)
+        raise
 
     # BM25 SEARCH
     print("BEFORE BM25", flush=True)
