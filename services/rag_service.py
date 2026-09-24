@@ -435,6 +435,18 @@ def get_rag_response(query, conversation_history):
 
     print("CHROMA FILTER:", chroma_filter, flush=True)
 
+    print("BEFORE EMBEDDING TEST", flush=True)
+
+    try:
+        test_embedding = embeddings.embed_query(self_search_query)
+
+        print("EMBEDDING TEST COMPLETE", flush=True)
+        print("EMBEDDING LENGTH:", len(test_embedding), flush=True)
+
+    except Exception as e:
+        print("EMBEDDING TEST ERROR:", repr(e), flush=True)
+        raise
+
     print("STARTING VECTOR SEARCH", flush=True)
 
     print("BEFORE CHROMA SIMILARITY SEARCH", flush=True)
