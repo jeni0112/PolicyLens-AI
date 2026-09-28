@@ -28,6 +28,16 @@ documents = [
     for item in chunks_data
 ]
 
+def print_memory_usage(label):
+    try:
+        with open("/proc/self/status", "r") as f:
+            for line in f:
+                if line.startswith("VmRSS:"):
+                    print(f"{label} - {line.strip()}", flush=True)
+                    break
+    except Exception as e:
+        print("MEMORY CHECK ERROR:", e, flush=True)
+
 def generate_self_query(user_query):
     """
     Uses the LLM to convert the user's natural-language question
@@ -458,6 +468,21 @@ def get_rag_response(query, conversation_history):
 
     print("STARTING VECTOR SEARCH", flush=True)
 
+    print_memory_usage("BEFORE CHROMA SEARCH")
+
+    print("STARTING VECTOR SEARCH", flush=True)
+    print("BEFORE CHROMA SIMILARITY SEARCH", flush=True)
+
+    vector_results = db.similarity_search(
+        self_search_query,
+        k=2
+    )
+
+    print("AFTER CHROMA SIMILARITY SEARCH", flush=True)
+
+    print_memory_usage("AFTER CHROMA SEARCH")
+
+    """
     print("BEFORE CHROMA SIMILARITY SEARCH", flush=True)
 
     try:
@@ -472,6 +497,8 @@ def get_rag_response(query, conversation_history):
     except Exception as e:
         print("CHROMA SEARCH ERROR:", repr(e), flush=True)
         raise
+        
+    """
 
     # BM25 SEARCH
     print("BEFORE BM25", flush=True)
