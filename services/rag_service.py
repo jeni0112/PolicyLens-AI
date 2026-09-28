@@ -470,18 +470,15 @@ def get_rag_response(query, conversation_history):
 
     print_memory_usage("BEFORE CHROMA SEARCH")
 
-    print("STARTING VECTOR SEARCH", flush=True)
-    print("BEFORE CHROMA SIMILARITY SEARCH", flush=True)
+    print("CHROMA TEST 1 - START", flush=True)
 
     vector_results = db.similarity_search(
-        self_search_query,
-        k=2
+        "hello",
+        k=1
     )
 
-    print("AFTER CHROMA SIMILARITY SEARCH", flush=True)
-
-    print_memory_usage("AFTER CHROMA SEARCH")
-
+    print("CHROMA TEST 1 - COMPLETE", flush=True)
+    print("RESULT COUNT:", len(vector_results), flush=True)
     """
     print("BEFORE CHROMA SIMILARITY SEARCH", flush=True)
 
