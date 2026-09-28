@@ -104,50 +104,23 @@ print("Vector database created successfully!", flush=True)
 
 # Can be deleted after testing, but useful for debugging
 
-print("========== CHROMA POST-INGEST TEST ==========", flush=True)
+print("========== REAL VECTORSTORE SEARCH TEST ==========", flush=True)
 
-print("Creating test Chroma connection...", flush=True)
+print("REAL VECTORSTORE SEARCH START", flush=True)
 
-test_db = Chroma(
-    persist_directory="vectorstore",
-    embedding_function=embeddings
+test_results = db.similarity_search(
+    "tell me about leave policy",
+    k=1
 )
 
-print("Test Chroma connection created", flush=True)
+print("REAL VECTORSTORE SEARCH COMPLETE", flush=True)
+print("REAL SEARCH RESULT COUNT:", len(test_results), flush=True)
 
-print("Getting collection count...", flush=True)
-
-print(
-    "TEST COLLECTION COUNT:",
-    test_db._collection.count(),
-    flush=True
-)
-
-print("========== CHROMA POST-INGEST TEST COMPLETE ==========", flush=True)
-
-# ==========================================
-# CHROMA FILESYSTEM TEST
-# ==========================================
-
-print("========== CHROMA FILESYSTEM TEST ==========", flush=True)
-
-print(
-    "VECTORSTORE EXISTS:",
-    os.path.exists("vectorstore"),
-    flush=True
-)
-
-print(
-    "VECTORSTORE ABSOLUTE PATH:",
-    os.path.abspath("vectorstore"),
-    flush=True
-)
-
-if os.path.exists("vectorstore"):
+for i, doc in enumerate(test_results):
     print(
-        "VECTORSTORE FILES:",
-        os.listdir("vectorstore"),
+        f"REAL RESULT {i + 1}:",
+        doc.page_content[:300],
         flush=True
     )
 
-print("========== CHROMA FILESYSTEM TEST COMPLETE ==========", flush=True)
+print("========== REAL VECTORSTORE SEARCH TEST END ==========", flush=True)
