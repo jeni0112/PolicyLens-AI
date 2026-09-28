@@ -100,4 +100,54 @@ db = Chroma.from_documents(
     persist_directory="vectorstore"
 )
 
-print("Vector database created successfully!")
+print("Vector database created successfully!", flush=True)
+
+# Can be deleted after testing, but useful for debugging
+
+print("========== CHROMA POST-INGEST TEST ==========", flush=True)
+
+print("Creating test Chroma connection...", flush=True)
+
+test_db = Chroma(
+    persist_directory="vectorstore",
+    embedding_function=embeddings
+)
+
+print("Test Chroma connection created", flush=True)
+
+print("Getting collection count...", flush=True)
+
+print(
+    "TEST COLLECTION COUNT:",
+    test_db._collection.count(),
+    flush=True
+)
+
+print("========== CHROMA POST-INGEST TEST COMPLETE ==========", flush=True)
+
+# ==========================================
+# CHROMA FILESYSTEM TEST
+# ==========================================
+
+print("========== CHROMA FILESYSTEM TEST ==========", flush=True)
+
+print(
+    "VECTORSTORE EXISTS:",
+    os.path.exists("vectorstore"),
+    flush=True
+)
+
+print(
+    "VECTORSTORE ABSOLUTE PATH:",
+    os.path.abspath("vectorstore"),
+    flush=True
+)
+
+if os.path.exists("vectorstore"):
+    print(
+        "VECTORSTORE FILES:",
+        os.listdir("vectorstore"),
+        flush=True
+    )
+
+print("========== CHROMA FILESYSTEM TEST COMPLETE ==========", flush=True)

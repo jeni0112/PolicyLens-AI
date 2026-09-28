@@ -475,6 +475,7 @@ def get_rag_response(query, conversation_history):
 
     print("CHROMA TEST - DIRECT COLLECTION QUERY START", flush=True)
     print("CHROMA COLLECTION COUNT START", flush=True)
+    print("COLLECTION NAME:", db._collection.name, flush=True)
 
     count = db._collection.count()
 
