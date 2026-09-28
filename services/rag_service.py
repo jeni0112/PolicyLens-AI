@@ -356,36 +356,36 @@ def get_rag_response(query, conversation_history):
                 conversation_text += f"{role.upper()}: {content}\n"
 
         rewrite_prompt = f"""
-    You are helping a company policy RAG system.
+        You are helping a company policy RAG system.
 
-    Your job is to rewrite the user's latest question into a
-    standalone search query ONLY when the latest question depends
-    on the previous conversation.
+        Your job is to rewrite the user's latest question into a
+        standalone search query ONLY when the latest question depends
+        on the previous conversation.
 
-    Previous conversation:
-    {conversation_text}
+        Previous conversation:
+        {conversation_text}
 
-    Latest user question:
-    {query}
+        Latest user question:
+        {query}
 
-    Rules:
+        Rules:
 
-    1. If the latest question is already clear and standalone,
-    return it unchanged.
+        1. If the latest question is already clear and standalone,
+        return it unchanged.
 
-    2. If the latest question depends on previous conversation,
-    rewrite it using the relevant context.
+        2. If the latest question depends on previous conversation,
+        rewrite it using the relevant context.
 
-    3. Preserve the user's actual intent.
+        3. Preserve the user's actual intent.
 
-    4. Do NOT answer the question.
+        4. Do NOT answer the question.
 
-    5. Do NOT add information that is not present in the conversation.
+        5. Do NOT add information that is not present in the conversation.
 
-    6. Return ONLY the rewritten search query.
+        6. Return ONLY the rewritten search query.
 
-    Rewritten search query:
-    """
+        Rewritten search query:
+        """
 
         rewritten_query = get_response(rewrite_prompt).strip()
 
@@ -454,20 +454,38 @@ def get_rag_response(query, conversation_history):
 
     print("CHROMA FILTER:", chroma_filter, flush=True)
 
-    print("BEFORE EMBEDDING TEST", flush=True)
+    # can be deleted later
 
-    try:
-        test_embedding = embeddings.embed_query(self_search_query)
+    print("CHROMA FILTER:", chroma_filter, flush=True)
 
-        print("EMBEDDING TEST COMPLETE", flush=True)
-        print("EMBEDDING LENGTH:", len(test_embedding), flush=True)
-
-    except Exception as e:
-        print("EMBEDDING TEST ERROR:", repr(e), flush=True)
-        raise
+    # ------------------------------------------
+    # DIRECT CHROMA DEBUG TEST
+    # ------------------------------------------
 
     print("STARTING VECTOR SEARCH", flush=True)
 
+    print_memory_usage("BEFORE CHROMA SEARCH")
+
+    print("CHROMA TEST - EMBEDDING START", flush=True)
+
+    test_embedding = embeddings.embed_query("hello")
+
+    print("CHROMA TEST - EMBEDDING COMPLETE", flush=True)
+    print("EMBEDDING LENGTH:", len(test_embedding), flush=True)
+
+    print("CHROMA TEST - DIRECT COLLECTION QUERY START", flush=True)
+
+    results = db._collection.query(
+        query_embeddings=[test_embedding],
+        n_results=1
+    )
+
+    print("CHROMA TEST - DIRECT COLLECTION QUERY COMPLETE", flush=True)
+
+    print("RESULTS:", results, flush=True)
+
+    print_memory_usage("AFTER DIRECT CHROMA QUERY")
+    """
     print_memory_usage("BEFORE CHROMA SEARCH")
 
     print("CHROMA TEST 1 - START", flush=True)
@@ -479,7 +497,7 @@ def get_rag_response(query, conversation_history):
 
     print("CHROMA TEST 1 - COMPLETE", flush=True)
     print("RESULT COUNT:", len(vector_results), flush=True)
-    """
+    
     print("BEFORE CHROMA SIMILARITY SEARCH", flush=True)
 
     try:
