@@ -445,23 +445,19 @@ def get_rag_response(query, conversation_history):
 
     print("CHROMA TEST 1 - START", flush=True)
 
-    print("========== ACTUAL APP CHROMA TEST ==========", flush=True)
+    print("BEFORE CHROMA SEARCH", flush=True)
 
-    print("SELF QUERY:", repr(self_search_query), flush=True)
-    print("CHROMA FILTER:", repr(chroma_filter), flush=True)
+    print("DB OBJECT:", db, flush=True)
 
-    print("CREATING FRESH CHROMA OBJECT", flush=True)
+    print("DB COLLECTION:", db._collection, flush=True)
 
-    test_db = Chroma(
-        persist_directory="vectorstore",
-        embedding_function=embeddings
-    )
-
-    print("FRESH CHROMA OBJECT CREATED", flush=True)
+    print("DB COLLECTION COUNT:", db._collection.count(), flush=True)
 
     print("STARTING SIMILARITY SEARCH", flush=True)
 
-    vector_results = test_db.similarity_search(
+    print("STARTING SIMILARITY SEARCH", flush=True)
+
+    vector_results = db.similarity_search(
         self_search_query,
         k=3,
         filter=chroma_filter
