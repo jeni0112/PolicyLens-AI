@@ -103,7 +103,7 @@ db = Chroma.from_documents(
 print("Vector database created successfully!", flush=True)
 
 # Can be deleted after testing, but useful for debugging
-
+"""
 print("========== REAL VECTORSTORE SEARCH TEST ==========", flush=True)
 
 print("REAL VECTORSTORE SEARCH START", flush=True)
@@ -124,3 +124,4 @@ for i, doc in enumerate(test_results):
     )
 
 print("========== REAL VECTORSTORE SEARCH TEST END ==========", flush=True)
+"""

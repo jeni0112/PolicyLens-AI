@@ -331,17 +331,9 @@ def check_query_scope(query):
 
 
 def get_rag_response(query, conversation_history):
-
-    print("\n========== RAG START ==========", flush=True)
-    print("QUERY:", query, flush=True)
-    print("HISTORY LENGTH:", len(conversation_history), flush=True)
-
     # ==========================================
     # CONVERSATION-AWARE QUERY REWRITING
     # ==========================================
-
-    print("BEFORE REWRITE", flush=True)
-
     rewritten_query = query
 
     if conversation_history:
@@ -389,11 +381,8 @@ def get_rag_response(query, conversation_history):
 
         rewritten_query = get_response(rewrite_prompt).strip()
 
-        print("After REWRITE", flush=True)
-
         if not rewritten_query:
             rewritten_query = query
-
 
     print("\n==============================")
     print("CONVERSATION QUERY REWRITE")
@@ -420,13 +409,11 @@ def get_rag_response(query, conversation_history):
     # ==========================================
     # METADATA-AWARE QUERY
     # ==========================================
-    print("BEFORE self query", flush=True)
 
     self_query_result = generate_self_query(rewritten_query)
 
     self_search_query = self_query_result["search_query"]
     metadata_filters = self_query_result["metadata_filters"]
-
 
     print("\n==============================")
     print("SELF QUERY")
@@ -435,8 +422,6 @@ def get_rag_response(query, conversation_history):
     print("Conversation-Rewritten Query:", rewritten_query)
     print("Self-Query Search Query:", self_search_query)
     print("Metadata Filters:", metadata_filters)
-
-    print("After self query", flush=True)
 
     # VECTOR SEARCH
 
@@ -456,58 +441,19 @@ def get_rag_response(query, conversation_history):
 
     # can be deleted later
 
-    print("CHROMA FILTER:", chroma_filter, flush=True)
-
-    # ------------------------------------------
-    # DIRECT CHROMA DEBUG TEST
-    # ------------------------------------------
-
-    print("STARTING VECTOR SEARCH", flush=True)
-
-    print_memory_usage("BEFORE CHROMA SEARCH")
-
-    print("CHROMA TEST - EMBEDDING START", flush=True)
-
-    test_embedding = embeddings.embed_query("hello")
-
-    print("CHROMA TEST - EMBEDDING COMPLETE", flush=True)
-    print("EMBEDDING LENGTH:", len(test_embedding), flush=True)
-
-    print("CHROMA TEST - DIRECT COLLECTION QUERY START", flush=True)
-    print("CHROMA COLLECTION COUNT START", flush=True)
-    print("COLLECTION NAME:", db._collection.name, flush=True)
-
-    count = db._collection.count()
-
-    print("CHROMA COLLECTION COUNT:", count, flush=True)
-
-    print("CHROMA COLLECTION COUNT COMPLETE", flush=True)
-
-    results = db._collection.query(
-        query_embeddings=[test_embedding],
-        n_results=1
-    )
-
-    print("CHROMA TEST - DIRECT COLLECTION QUERY COMPLETE", flush=True)
-
-    print("RESULTS:", results, flush=True)
-
-    print_memory_usage("AFTER DIRECT CHROMA QUERY")
-    """
     print_memory_usage("BEFORE CHROMA SEARCH")
 
     print("CHROMA TEST 1 - START", flush=True)
 
-    vector_results = db.similarity_search(
-        "hello",
-        k=1
+    vector_results = db.max_marginal_relevance_search(
+        self_search_query, k=5, fetch_k=10, filter=chroma_filter
     )
 
     print("CHROMA TEST 1 - COMPLETE", flush=True)
     print("RESULT COUNT:", len(vector_results), flush=True)
     
     print("BEFORE CHROMA SIMILARITY SEARCH", flush=True)
-
+    """
     try:
         print("Inside try block", flush=True)
         vector_results = db.similarity_search(
@@ -522,7 +468,6 @@ def get_rag_response(query, conversation_history):
         raise
         
     """
-
     # BM25 SEARCH
     print("BEFORE BM25", flush=True)
 
