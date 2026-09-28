@@ -18,19 +18,7 @@ def get_vectorstore():
     print("CHROMA CONNECTION CREATED", flush=True)
 
     return vectorstore
-"""
-# Load the Chroma database
-db = Chroma(persist_directory="vectorstore", embedding_function=embeddings)
 
-print("========== CHROMA STARTUP TEST ==========", flush=True)
-
-try:
-    print("CHROMA COUNT:", db._collection.count(), flush=True)
-except Exception as e:
-    print("CHROMA COUNT ERROR:", repr(e), flush=True)
-
-print("========== CHROMA STARTUP TEST END ==========", flush=True)
-"""
 # Load chunks saved during ingestion
 with open("chunks.json", "r", encoding="utf-8") as f:
     chunks_data = json.load(f)
@@ -451,13 +439,7 @@ def get_rag_response(query, conversation_history):
 
     print("CHROMA FILTER:", chroma_filter, flush=True)
 
-    # can be deleted later
-
     print_memory_usage("BEFORE CHROMA SEARCH")
-
-    print("CHROMA TEST 1 - START", flush=True)
-
-    print("BEFORE CHROMA SEARCH", flush=True)
 
     print("BEFORE CHROMA SEARCH", flush=True)
 
@@ -465,13 +447,11 @@ def get_rag_response(query, conversation_history):
 
     print("CHROMA OBJECT READY", flush=True)
 
-    vector_results = db.similarity_search(
+    vector_results = db.max_marginal_relevance_search(
         self_search_query,
         k=3,
         filter=chroma_filter
     )
-
-    print("SIMILARITY SEARCH COMPLETED", flush=True)
     print("RESULT COUNT:", len(vector_results), flush=True)
 
     for i, doc in enumerate(vector_results):
@@ -481,21 +461,7 @@ def get_rag_response(query, conversation_history):
             doc.metadata.get("policy_type"),
             flush=True
         )
-    """
-    try:
-        print("Inside try block", flush=True)
-        vector_results = db.similarity_search(
-        self_search_query, k=2
-        )
 
-        print("AFTER CHROMA SIMILARITY SEARCH", flush=True)
-        print("VECTOR RESULTS:", len(vector_results), flush=True)
-
-    except Exception as e:
-        print("CHROMA SEARCH ERROR:", repr(e), flush=True)
-        raise
-        
-    """
     # BM25 SEARCH
     print("BEFORE BM25", flush=True)
 

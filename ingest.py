@@ -1,12 +1,3 @@
-import sys
-import chromadb
-
-
-print("========== ENVIRONMENT VERSIONS ==========", flush=True)
-print("Python:", sys.version, flush=True)
-print("ChromaDB:", chromadb.__version__, flush=True)
-print("==========================================", flush=True)
-
 import shutil
 import os
 
@@ -101,27 +92,3 @@ db = Chroma.from_documents(
 )
 
 print("Vector database created successfully!", flush=True)
-
-# Can be deleted after testing, but useful for debugging
-"""
-print("========== REAL VECTORSTORE SEARCH TEST ==========", flush=True)
-
-print("REAL VECTORSTORE SEARCH START", flush=True)
-
-test_results = db.similarity_search(
-    "tell me about leave policy",
-    k=1
-)
-
-print("REAL VECTORSTORE SEARCH COMPLETE", flush=True)
-print("REAL SEARCH RESULT COUNT:", len(test_results), flush=True)
-
-for i, doc in enumerate(test_results):
-    print(
-        f"REAL RESULT {i + 1}:",
-        doc.page_content[:300],
-        flush=True
-    )
-
-print("========== REAL VECTORSTORE SEARCH TEST END ==========", flush=True)
-"""

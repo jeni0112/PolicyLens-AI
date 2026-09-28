@@ -21,11 +21,6 @@ def serve_document(filename):
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    print("\n========== CHAT ROUTE ENTERED ==========", flush=True)
-    print(f"REQUEST METHOD: {request.method}", flush=True)
-    print(f"CONTENT TYPE: {request.content_type}", flush=True)
-    print(f"CONTENT LENGTH: {request.content_length}", flush=True)
-
 
     prompt = request.form.get("prompt", "").strip()
     print(f"PROMPT RECEIVED: {prompt}", flush=True)
@@ -38,14 +33,8 @@ def chat():
     # Get existing conversation
     messages = session.get("messages", [])
 
-    print("AFTER SESSION GET", flush=True)
-
-    print("BEFORE GET_RAG_RESPONSE", flush=True)
-
     response, sources, show_sources = get_rag_response(prompt, messages)
-
-    print("AFTER GET_RAG_RESPONSE", flush=True)
-
+    
     # Remove duplicate source documents
     unique_sources = []
     seen_sources = set()
