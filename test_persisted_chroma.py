@@ -1,5 +1,6 @@
 import os
 import chromadb
+from config import embeddings
 
 print("========== PERSISTED CHROMA TEST ==========", flush=True)
 
@@ -29,12 +30,26 @@ print("COLLECTION OPENED", flush=True)
 
 print("STARTING RAW QUERY...", flush=True)
 
+print("GENERATING OPENAI QUERY EMBEDDING...", flush=True)
+
+query_embedding = embeddings.embed_query(
+    "tell me about leave policy"
+)
+
+print(
+    "QUERY EMBEDDING DIMENSION:",
+    len(query_embedding),
+    flush=True
+)
+
+print("STARTING RAW CHROMA QUERY...", flush=True)
+
 result = collection.query(
-    query_texts=["tell me about leave policy"],
+    query_embeddings=[query_embedding],
     n_results=3
 )
 
-print("RAW QUERY FINISHED", flush=True)
+print("RAW CHROMA QUERY FINISHED", flush=True)
 
 print("RESULT:", result, flush=True)
 
