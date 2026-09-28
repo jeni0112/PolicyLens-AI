@@ -7,6 +7,18 @@ from langchain_core.documents import Document
 from config import embeddings, POLICY_METADATA
 from services.openai_service import get_response
 
+def get_vectorstore():
+    print("CREATING CHROMA CONNECTION", flush=True)
+
+    vectorstore = Chroma(
+        persist_directory="vectorstore",
+        embedding_function=embeddings
+    )
+
+    print("CHROMA CONNECTION CREATED", flush=True)
+
+    return vectorstore
+"""
 # Load the Chroma database
 db = Chroma(persist_directory="vectorstore", embedding_function=embeddings)
 
@@ -18,7 +30,7 @@ except Exception as e:
     print("CHROMA COUNT ERROR:", repr(e), flush=True)
 
 print("========== CHROMA STARTUP TEST END ==========", flush=True)
-
+"""
 # Load chunks saved during ingestion
 with open("chunks.json", "r", encoding="utf-8") as f:
     chunks_data = json.load(f)
@@ -447,15 +459,11 @@ def get_rag_response(query, conversation_history):
 
     print("BEFORE CHROMA SEARCH", flush=True)
 
-    print("DB OBJECT:", db, flush=True)
+    print("BEFORE CHROMA SEARCH", flush=True)
 
-    print("DB COLLECTION:", db._collection, flush=True)
+    db = get_vectorstore()
 
-    print("DB COLLECTION COUNT:", db._collection.count(), flush=True)
-
-    print("STARTING SIMILARITY SEARCH", flush=True)
-
-    print("STARTING SIMILARITY SEARCH", flush=True)
+    print("CHROMA OBJECT READY", flush=True)
 
     vector_results = db.similarity_search(
         self_search_query,
