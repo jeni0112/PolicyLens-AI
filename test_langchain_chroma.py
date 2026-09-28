@@ -12,14 +12,15 @@ db = Chroma(
 
 print("2. Chroma object created", flush=True)
 
-print("3. Starting similarity search...", flush=True)
+print("3. Starting similarity search with FILTER...", flush=True)
 
 results = db.similarity_search(
     "tell me about leave policy",
-    k=3
+    k=3,
+    filter={"policy_type": "Leave"}
 )
 
-print("4. Similarity search completed", flush=True)
+print("4. Filtered Similarity search completed", flush=True)
 
 print("RESULT COUNT:", len(results), flush=True)
 
