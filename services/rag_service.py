@@ -474,6 +474,13 @@ def get_rag_response(query, conversation_history):
     print("EMBEDDING LENGTH:", len(test_embedding), flush=True)
 
     print("CHROMA TEST - DIRECT COLLECTION QUERY START", flush=True)
+    print("CHROMA COLLECTION COUNT START", flush=True)
+
+    count = db._collection.count()
+
+    print("CHROMA COLLECTION COUNT:", count, flush=True)
+
+    print("CHROMA COLLECTION COUNT COMPLETE", flush=True)
 
     results = db._collection.query(
         query_embeddings=[test_embedding],
