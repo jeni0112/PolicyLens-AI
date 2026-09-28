@@ -445,14 +445,38 @@ def get_rag_response(query, conversation_history):
 
     print("CHROMA TEST 1 - START", flush=True)
 
-    vector_results = db.max_marginal_relevance_search(
-        self_search_query, k=5, fetch_k=10, filter=chroma_filter
+    print("========== ACTUAL APP CHROMA TEST ==========", flush=True)
+
+    print("SELF QUERY:", repr(self_search_query), flush=True)
+    print("CHROMA FILTER:", repr(chroma_filter), flush=True)
+
+    print("CREATING FRESH CHROMA OBJECT", flush=True)
+
+    test_db = Chroma(
+        persist_directory="vectorstore",
+        embedding_function=embeddings
     )
 
-    print("CHROMA TEST 1 - COMPLETE", flush=True)
+    print("FRESH CHROMA OBJECT CREATED", flush=True)
+
+    print("STARTING SIMILARITY SEARCH", flush=True)
+
+    vector_results = test_db.similarity_search(
+        self_search_query,
+        k=3,
+        filter=chroma_filter
+    )
+
+    print("SIMILARITY SEARCH COMPLETED", flush=True)
     print("RESULT COUNT:", len(vector_results), flush=True)
-    
-    print("BEFORE CHROMA SIMILARITY SEARCH", flush=True)
+
+    for i, doc in enumerate(vector_results):
+        print(
+            f"RESULT {i+1}:",
+            doc.metadata.get("policy_id"),
+            doc.metadata.get("policy_type"),
+            flush=True
+        )
     """
     try:
         print("Inside try block", flush=True)
