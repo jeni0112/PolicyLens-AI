@@ -441,15 +441,14 @@ def get_rag_response(query, conversation_history):
 
     print_memory_usage("BEFORE CHROMA SEARCH")
 
-    print("BEFORE CHROMA SEARCH", flush=True)
-
     db = get_vectorstore()
 
     print("CHROMA OBJECT READY", flush=True)
 
     vector_results = db.max_marginal_relevance_search(
         self_search_query,
-        k=3,
+        k=5,
+        fetch_k=10,
         filter=chroma_filter
     )
     print("RESULT COUNT:", len(vector_results), flush=True)
